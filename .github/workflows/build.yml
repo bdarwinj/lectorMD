@@ -1,0 +1,123 @@
+name: Compilar ejecutables
+
+# Se ejecuta en cada push a main (los ejecutables quedan como artefactos),
+# al publicar una etiqueta de versión (git tag v2.0.0 && git push --tags) o a
+# mano desde la pestaña Actions. Con etiqueta, además crea la versión en
+# GitHub Releases con los cuatro archivos adjuntos.
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+    paths-ignore: ["**.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  linux:
+    name: Linux (.deb + AppImage)
+    # 22.04 y no 24.04: el ejecutable hereda la glibc del sistema donde se
+    # compila, así también funciona en distribuciones más antiguas.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: La etiqueta coincide con la versión del código
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          CODIGO="$(sed -n 's/^__version__ = "\(.*\)"/\1/p' lectormd/__init__.py)"
+          ETIQUETA="${GITHUB_REF_NAME#v}"
+          if [ "$CODIGO" != "$ETIQUETA" ]; then
+            echo "::error::La etiqueta es v$ETIQUETA pero lectormd/__init__.py dice $CODIGO"
+            exit 1
+          fi
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Bibliotecas del sistema que Qt necesita
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libxcb-cursor0 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 \
+            libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-shape0 \
+            libxcb-xkb1 libegl1 libgl1 libnss3 libxcomposite1 libxdamage1 \
+            libxrandr2 libxtst6 libxkbfile1 libasound2 libfontconfig1 file
+
+      - name: Dependencias de Python
+        run: pip install -r requirements-build.txt
+
+      - name: Compilar y empaquetar
+        run: bash packaging/linux/build.sh
+        env:
+          PYTHON: python
+
+      - name: Prueba de humo (el AppImage exporta la demo)
+        run: |
+          # En los runners no hay FUSE: se extrae y ejecuta.
+          ./dist/paquetes/lectorMD-*-x86_64.AppImage --appimage-extract-and-run \
+            DEMO.md --pdf demo.pdf --docx demo.docx
+          test -s demo.pdf && test -s demo.docx
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lectorMD-linux
+          path: dist/paquetes/*
+          if-no-files-found: error
+
+  windows:
+    name: Windows (instalador + portable)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Inno Setup
+        # Las imágenes actuales de Windows de GitHub ya no lo traen.
+        run: choco install innosetup -y --no-progress
+
+      - name: Compilar y empaquetar
+        shell: pwsh
+        run: .\packaging\windows\build.ps1 -SinVenv
+
+      - name: Prueba de humo (el ejecutable exporta la demo)
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath dist\lectorMD\lectorMD.exe `
+                 -ArgumentList "DEMO.md", "--pdf", "demo.pdf", "--docx", "demo.docx" `
+                 -Wait -PassThru -NoNewWindow
+          if ($p.ExitCode -ne 0) { throw "La exportación falló (código $($p.ExitCode))" }
+          foreach ($f in "demo.pdf", "demo.docx") {
+            if (-not (Test-Path $f) -or (Get-Item $f).Length -eq 0) { throw "No se generó $f" }
+          }
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lectorMD-windows
+          path: dist/paquetes/*
+          if-no-files-found: error
+
+  publicar:
+    name: Publicar en Releases
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [linux, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: paquetes
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          files: paquetes/*
+          generate_release_notes: true

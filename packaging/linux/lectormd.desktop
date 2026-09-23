@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=lectorMD
+GenericName=Visor de Markdown
+GenericName[en]=Markdown Viewer
+Comment=Lee archivos Markdown con formato y expórtalos a PDF o Word
+Comment[en]=Read formatted Markdown files and export them to PDF or Word
+Exec=lectormd %F
+Icon=lectormd
+Terminal=false
+StartupNotify=true
+StartupWMClass=lectormd
+Categories=Office;Viewer;
+MimeType=text/markdown;text/x-markdown;
+Keywords=markdown;md;visor;lector;documento;pdf;word;

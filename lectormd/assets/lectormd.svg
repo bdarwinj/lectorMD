@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="hoja" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eceefb"/>
+    </linearGradient>
+    <linearGradient id="borde" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b67d8"/>
+      <stop offset="1" stop-color="#4a56c8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- hoja de papel con la esquina doblada -->
+  <path d="M26 12h56l24 24v80a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4V16a4 4 0 0 1 4-4z"
+        fill="url(#hoja)" stroke="url(#borde)" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M82 12v20a4 4 0 0 0 4 4h20" fill="none"
+        stroke="url(#borde)" stroke-width="5" stroke-linejoin="round"/>
+
+  <!-- líneas de texto -->
+  <g fill="#4a56c8" opacity="0.28">
+    <rect x="38" y="62" width="52" height="6" rx="3"/>
+    <rect x="38" y="76" width="40" height="6" rx="3"/>
+  </g>
+
+  <!-- flecha de markdown -->
+  <g fill="none" stroke="#4a56c8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M38 48V34l10 10 10-10v14"/>
+    <path d="M72 34v14M64 42l8 8 8-8"/>
+  </g>
+</svg>

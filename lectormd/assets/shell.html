@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!-- Solo se ejecutan los scripts propios del lector. Un .md con HTML incrustado
+     no puede correr JavaScript (ni <script> ni atributos on*=) ni hacer
+     peticiones de red; sí puede mostrar imágenes remotas. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src file:; style-src file: 'unsafe-inline'; img-src file: data: blob: https: http:; font-src file: data:; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lectorMD</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<link rel="stylesheet" href="style.css">
+<style id="css-resaltado"></style>
+</head>
+<body data-tema="claro" data-fuente="sans" data-indice="oculto">
+
+<div id="progreso"></div>
+
+<div class="marco">
+  <nav id="indice" aria-label="Contenido del documento"></nav>
+
+  <main>
+    <header id="cabecera" style="display:none">
+      <h1 id="titulo"></h1>
+      <div id="meta"></div>
+    </header>
+
+    <article class="contenido"></article>
+
+    <section id="vacio">
+      <div class="icono">◧</div>
+      <h2>Ningún documento abierto</h2>
+      <p>Arrastra un archivo <strong>.md</strong> hasta aquí, o pulsa <kbd>Ctrl</kbd>+<kbd>O</kbd> para buscarlo.</p>
+    </section>
+  </main>
+</div>
+
+<div id="lupa"><img alt="Imagen ampliada"></div>
+<div id="flotante" role="status" aria-live="polite"></div>
+
+<script src="vendor/katex/katex.min.js"></script>
+<script src="vendor/mermaid.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.venv-win/
+
+# Compilación (PyInstaller, paquetes, herramientas descargadas)
+build/
+dist/
