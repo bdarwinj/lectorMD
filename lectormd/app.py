@@ -38,7 +38,7 @@ def _preparar_entorno() -> None:
 _preparar_entorno()
 
 # QtWebEngineWidgets debe importarse antes de crear la QApplication.
-from PySide6.QtCore import QMarginsF, QObject, QSize, Qt, QTimer, QUrl, Signal  # noqa: E402
+from PySide6.QtCore import QEvent, QMarginsF, QObject, QSize, Qt, QTimer, QUrl, Signal  # noqa: E402
 from PySide6.QtCore import QFileSystemWatcher  # noqa: E402
 from PySide6.QtGui import (  # noqa: E402
     QAction,
@@ -873,8 +873,31 @@ def _exportar_por_terminal(entrada: Path, pdf: Path | None, docx: Path | None) -
         else:
             QTimer.singleShot(100, esperar_documento)
 
+    # Un error dentro de una llamada de Qt no detiene el bucle de eventos: sin
+    # esto el proceso quedaría colgado en vez de fallar.
+    def error_inesperado(tipo, valor, traza):
+        sys.__excepthook__(tipo, valor, traza)
+        codigo["valor"] = 1
+        QApplication.instance().exit(1)
+
+    sys.excepthook = error_inesperado
     QTimer.singleShot(100, esperar_documento)
-    return QApplication.instance().exec()
+    resultado = QApplication.instance().exec()
+
+    # La página debe destruirse antes que su perfil; si no, Qt WebEngine puede
+    # caerse al cerrar y el código de salida deja de ser fiable.
+    v.visor.setPage(None)
+    v.pagina.deleteLater()
+    QApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    return resultado or codigo["valor"]
+
+
+def _consola_segura() -> None:
+    """Evita que un carácter que la consola no admite (p. ej. ✓ en la cp1252
+    de Windows) haga fallar la exportación: se sustituye por '?'."""
+    for flujo in (sys.stdout, sys.stderr):
+        if flujo is not None and hasattr(flujo, "reconfigure"):
+            flujo.reconfigure(errors="replace")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -883,6 +906,7 @@ def main(argv: list[str] | None = None) -> int:
     por_terminal = bool(args.pdf or args.docx)
 
     if por_terminal:
+        _consola_segura()
         if len(args.archivos) != 1:
             print("Para exportar indica exactamente un documento .md", file=sys.stderr)
             return 2

@@ -20,6 +20,7 @@ jobs:
     # 22.04 y no 24.04: el ejecutable hereda la glibc del sistema donde se
     # compila, así también funciona en distribuciones más antiguas.
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
 
@@ -57,6 +58,7 @@ jobs:
           PYTHON: python
 
       - name: Prueba de humo (el AppImage exporta la demo)
+        timeout-minutes: 5
         run: |
           # En los runners no hay FUSE: se extrae y ejecuta.
           ./dist/paquetes/lectorMD-*-x86_64.AppImage --appimage-extract-and-run \
@@ -72,6 +74,7 @@ jobs:
   windows:
     name: Windows (instalador + portable)
     runs-on: windows-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
 
@@ -90,6 +93,7 @@ jobs:
         run: .\packaging\windows\build.ps1 -SinVenv
 
       - name: Prueba de humo (el ejecutable exporta la demo)
+        timeout-minutes: 5
         shell: pwsh
         run: |
           $p = Start-Process -FilePath dist\lectorMD\lectorMD.exe `
