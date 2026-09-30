@@ -38,13 +38,13 @@ portable se descomprime y se ejecuta `lectorMD.exe`, sin instalar nada.
 **Linux.** El `.deb` sirve para Debian, Ubuntu, Mint, Zorin y derivadas:
 
 ```bash
-sudo apt install ./lectormd_2.0.1_amd64.deb
+sudo apt install ./lectormd_2.0.2_amd64.deb
 ```
 
 El AppImage funciona en cualquier distribución sin instalar:
 
 ```bash
-chmod +x lectorMD-2.0.1-x86_64.AppImage && ./lectorMD-2.0.1-x86_64.AppImage
+chmod +x lectorMD-2.0.2-x86_64.AppImage && ./lectorMD-2.0.2-x86_64.AppImage
 ```
 
 ## Uso
