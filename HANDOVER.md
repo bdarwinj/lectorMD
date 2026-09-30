@@ -49,3 +49,12 @@ Anotados durante el análisis del 2026-09-29. Ninguno se ha tocado todavía.
 - Estado: `SIN VERIFICAR` — hay que mirar la barra lateral del repositorio.
 - Desvíos: el borrado de la ejecución `35822208398` lo bloqueó el entorno;
   no se intentó por otra vía. Lo hace el autor desde la web.
+
+### 2026-09-29 — Autor y canal de YouTube en «Acerca de»
+
+- `lectormd/app.py`, `_acerca()`: añadido «Creado por Darwin J. Bolívar V.» y
+  el enlace https://www.youtube.com/@bdarwinj, con el color de acento del tema.
+  `QMessageBox.about` ya abre los enlaces externos (comprobado en PySide6 6.11.2).
+- Estado: `SIN VERIFICAR` — captura offscreen correcta; falta verlo en la
+  ventana real (tema oscuro) y comprobar que el enlace abre el navegador.
+- Desvíos: ninguno.

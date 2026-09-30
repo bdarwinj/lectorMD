@@ -788,11 +788,15 @@ class Ventana(QMainWindow):
 
     # -------------------------------------------------------------- varios
     def _acerca(self) -> None:
+        acento = PALETAS[self._tema_efectivo()]["acento"]
         QMessageBox.about(
             self,
             f"Acerca de {NOMBRE}",
             f"<h3>{NOMBRE} {__version__}</h3>"
             "<p>Visor de Markdown con exportación a PDF y Word.</p>"
+            "<p>Creado por <b>Darwin J. Bolívar V.</b><br>"
+            f"<a href='https://www.youtube.com/@bdarwinj' style='color:{acento}'>"
+            "youtube.com/@bdarwinj</a></p>"
             "<p style='color:gray'>Construido con Qt (PySide6, LGPLv3), markdown-it-py, "
             "Pygments, python-docx, Mermaid y KaTeX.</p>",
         )
