@@ -6,9 +6,10 @@ tarea. Vocabulario de estado: `VERIFICADO`, `SIN VERIFICAR`, `DEFECTUOSO`,
 
 ## Estado actual
 
-- Versión en curso: **2.0.1** (release en preparación). Anterior: **2.0.0** (etiqueta `v2.0.0` sobre `ef7bd26`, release en
-  GitHub del 2026-09-23 con .deb, AppImage, instalador y portable de Windows).
-- CI: última ejecución en `main` y en `v2.0.0` con éxito (2026-09-23).
+- Versión publicada: **2.0.1** (etiqueta `v2.0.1` sobre `efbce12`, release en
+  GitHub del 2026-09-30 con .deb, AppImage, instalador y portable de Windows).
+  Anterior: 2.0.0 (`ef7bd26`, 2026-09-23).
+- CI: última ejecución en `main` y en `v2.0.1` con éxito (2026-09-30).
 - Árbol de trabajo limpio y sincronizado con `origin/main` a 2026-09-29.
 
 ## Defectos y mejoras conocidos
@@ -62,6 +63,8 @@ Anotados durante el análisis del 2026-09-29. Ninguno se ha tocado todavía.
 ### 2026-09-29 — Versión 2.0.1
 
 - `__version__` a 2.0.1 y comandos de instalación del README actualizados.
-- Etiqueta `v2.0.1` subida: la CI compila y publica la release.
-- Estado: `SIN VERIFICAR` hasta que la CI termine y se descarguen los paquetes.
+- Etiqueta `v2.0.1` subida. CI 36666791767: Linux, Windows y Publicar con
+  éxito (pruebas de humo incluidas); release publicada con los 4 paquetes.
+- Estado: CI y publicación `VERIFICADO`. «Acerca de» en los paquetes
+  instalados `SIN VERIFICAR` (falta abrirlo en Linux y Windows).
 - Desvíos: ninguno.
