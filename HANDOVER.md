@@ -95,3 +95,8 @@ Anotados durante el análisis del 2026-09-29. Ninguno se ha tocado todavía.
 - Estado: publicación `VERIFICADO`. Que la ventana abra con el .deb/AppImage
   de la 2.0.2 en Zorin 18: `SIN VERIFICAR`.
 - Desvíos: ninguno (la prueba previa se omitió a petición del autor).
+- Después: probado el artefacto de la CI de `main` (mismo commit `049c927`)
+  en este equipo (Zorin 18, X11). .deb extraído sin instalar: no trae
+  libstdc++ ni libgcc_s, `--version` da 2.0.2, la ventana sigue en marcha a
+  los 10 s sin error GLX, y exporta PDF y Word. El AppImage también sigue en
+  marcha a los 10 s. Falta que el autor vea la ventana y la use.
