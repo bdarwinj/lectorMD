@@ -6,7 +6,7 @@ tarea. Vocabulario de estado: `VERIFICADO`, `SIN VERIFICAR`, `DEFECTUOSO`,
 
 ## Estado actual
 
-- Versión publicada: **2.0.0** (etiqueta `v2.0.0` sobre `ef7bd26`, release en
+- Versión en curso: **2.0.1** (release en preparación). Anterior: **2.0.0** (etiqueta `v2.0.0` sobre `ef7bd26`, release en
   GitHub del 2026-09-23 con .deb, AppImage, instalador y portable de Windows).
 - CI: última ejecución en `main` y en `v2.0.0` con éxito (2026-09-23).
 - Árbol de trabajo limpio y sincronizado con `origin/main` a 2026-09-29.
@@ -57,4 +57,11 @@ Anotados durante el análisis del 2026-09-29. Ninguno se ha tocado todavía.
   `QMessageBox.about` ya abre los enlaces externos (comprobado en PySide6 6.11.2).
 - Estado: `SIN VERIFICAR` — captura offscreen correcta; falta verlo en la
   ventana real (tema oscuro) y comprobar que el enlace abre el navegador.
+- Desvíos: ninguno.
+
+### 2026-09-29 — Versión 2.0.1
+
+- `__version__` a 2.0.1 y comandos de instalación del README actualizados.
+- Etiqueta `v2.0.1` subida: la CI compila y publica la release.
+- Estado: `SIN VERIFICAR` hasta que la CI termine y se descarguen los paquetes.
 - Desvíos: ninguno.
