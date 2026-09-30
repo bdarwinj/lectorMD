@@ -88,6 +88,11 @@ MODULOS_QT_SOBRANTES = {
 }
 MODULOS_QT_SOBRANTES |= {m for m in MODULOS_QT_SOBRANTES if m.startswith("Labs")}
 IDIOMAS = ("en", "en-US", "es", "es-419")
+# En Linux se usan las del sistema: la CI compila en Ubuntu 22.04 y su
+# libstdc++ es más vieja que la que necesitan los drivers Mesa de sistemas
+# más nuevos (Ubuntu 24.04, Zorin 18). Con la del paquete, GLX no arranca y
+# la ventana aborta. Cualquier distro soportada trae una igual o más nueva.
+BIBLIOTECAS_DEL_SISTEMA = () if ES_WINDOWS else ("libstdc++.so.6", "libgcc_s.so.1")
 _LIB_QT = re.compile(r"^(?:lib)?Qt6([A-Za-z0-9]+?)(?:\.so(?:\.\d+)*|\.dll)$")
 
 
@@ -95,6 +100,8 @@ def _sobra(destino: str) -> bool:
     ruta = destino.replace("\\", "/")
     nombre = ruta.rsplit("/", 1)[-1]
     if "/qml/" in f"/{ruta}":
+        return True
+    if nombre in BIBLIOTECAS_DEL_SISTEMA:
         return True
     m = _LIB_QT.match(nombre)
     if m and (m.group(1) in MODULOS_QT_SOBRANTES or m.group(1).startswith("Labs")):

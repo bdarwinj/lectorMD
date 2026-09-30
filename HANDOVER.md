@@ -29,6 +29,10 @@ Anotados durante el análisis del 2026-09-29. Ninguno se ha tocado todavía.
 | D9 | PENDIENTE | `mathml2omml==0.0.2` fijada y muy pequeña: si falla, las fórmulas caen a texto plano sin aviso. |
 | D10 | PENDIENTE | `PySide6<6.12`: habrá que probar y subir el tope cuando salga Qt 6.12. |
 | D11 | PENDIENTE | GitHub muestra a `claude` en Contributors. Origen: el primer push (2026-09-23 05:23Z) subió `4e59add` y `e0891d2` con `Co-Authored-By: Claude Opus 5.5`; a los 7 min un force-push los sustituyó por `4631f04` y `492112c`, que están limpios. Los commits viejos siguen en GitHub sin rama, los referencia la ejecución de Actions `35822208398` y la barra lateral de Contributors está en caché. El historial actual (local y remoto) está limpio. 2026-09-29: se sube un commit nuevo para forzar el recálculo; borrar la ejecución `35822208398` queda para el autor (Actions → ejecución → «Delete workflow run»). Si persiste: GitHub Support. |
+| D12 | DEFECTUOSO | 2.0.1 (.deb y AppImage de la CI) aborta al abrir la ventana en Zorin 18 / Ubuntu 24.04: `Could not initialize GLX`. Causa: la CI (Ubuntu 22.04) empaqueta `libstdc++.so.6` (GLIBCXX 3.4.30) y `libgcc_s.so.1`, más viejas que las que necesita Mesa del sistema (3.4.33). Corregido en `packaging/lectormd.spec` (se excluyen en Linux); falta publicarlo. El modo terminal no falla porque usa offscreen sin GPU: por eso la prueba de humo de la CI no lo detectó. |
+| D13 | PENDIENTE | La CI no prueba la ventana real: solo exporta en offscreen con `--disable-gpu`. Un fallo de GLX o del plugin xcb pasa sin detectarse. |
+| D14 | PENDIENTE | La glib empaquetada (22.04) choca con módulos GIO del sistema (`libgvfsdbus.so: undefined symbol: g_task_set_static_name`). Hoy solo es un aviso; vigilar. |
+| D15 | PENDIENTE | En este equipo no está instalado `libxcb-cursor0`: las compilaciones locales salen sin él y no abren ventana (`build.sh` solo avisa). También impide `python -m lectormd` en desarrollo. |
 
 ## Historial
 
@@ -67,4 +71,15 @@ Anotados durante el análisis del 2026-09-29. Ninguno se ha tocado todavía.
   éxito (pruebas de humo incluidas); release publicada con los 4 paquetes.
 - Estado: CI y publicación `VERIFICADO`. «Acerca de» en los paquetes
   instalados `SIN VERIFICAR` (falta abrirlo en Linux y Windows).
+- Desvíos: ninguno.
+
+### 2026-09-29 — 2.0.1 no abre en Linux (D12)
+
+- Diagnóstico: aborto por GLX. Con `LD_PRELOAD` de la libstdc++ del sistema
+  abre; con una copia de `/opt/lectormd` sin `libstdc++.so.6` ni
+  `libgcc_s.so.1` abre la ventana y exporta PDF y Word.
+- `packaging/lectormd.spec`: esas dos bibliotecas se excluyen en Linux.
+  Compilado en local: la poda las deja fuera (la ventana local no abre por D15,
+  ajeno a esto).
+- Estado: corrección `SIN VERIFICAR` en un paquete de la CI.
 - Desvíos: ninguno.
